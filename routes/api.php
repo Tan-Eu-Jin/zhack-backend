@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ConfidenceController; 
+use App\Http\Controllers\BestFitController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/confidence', [ConfidenceController::class, 'calculateConfidence']);
+Route::post('/best_fit', [BestFitController::class, 'getBestFit']);
