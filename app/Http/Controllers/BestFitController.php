@@ -367,7 +367,7 @@ class BestFitController extends Controller
             ];
         }
 
-        if ($debugType === 'second_level_found_match_wait_bag_reply' || $debugType === 'second_level_found_match_add_to_bag' || $debugType === 'second_level_found_match_add_to_bag') {
+        if ($debugType === 'second_level_found_match_wait_bag_reply' || $debugType === 'second_level_found_match_add_to_bag' || $debugType === 'second_level_found_show_simillar_items') {
             return [
                 'images' => [
                     'https://placehold.co/270x480?text=Inverted+Triangle&font=lato',
