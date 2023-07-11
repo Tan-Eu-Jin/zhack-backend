@@ -42,31 +42,12 @@ class BestFitController extends Controller
         // Connect To OpenAI
         // $chat = $this->getOpenAiResponse();
 
-        // Get Messages
-        $messages = $this->getMessages($debugType);
-
-        // Get Body Shape Images
-        $bodyShapes = $this->getBodyShape($debugType);
-
         // Final Best Fit
         $confidenceScore = rand(0, 1000);
-        $bestFit = [
-            'size' => 'M',
-            'size_system' => 'Intl.'
-        ];
-
-        // Recommended Products
-        $recommendedProducts = [];
-        if ($debugType === 'first_level_found_match_show_simillar_items' || $debugType === 'second_level_found_show_simillar_items') {
-            $recommendedProducts = $this->getRecomendedProducts();
-        }
 
         return response()->json([
             'data' => [
-                'best_fit' => $bestFit,
-                'body_shapes' => $bodyShapes,
-                'messages' => $messages,
-                'recomended_products' => $recommendedProducts,
+                'messages' => $this->getMessages($debugType),
             ]
         ]);
     }
@@ -177,6 +158,11 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -189,6 +175,11 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -216,6 +207,11 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -231,6 +227,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'We found some similiar options you might like:',
+                'recomended_products' => $this->getRecomendedProducts(),
             ]);
         }
 
@@ -238,6 +235,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
+                'body_shapes' => $this->getBodyShape($debugType),
             ]);
         }
 
@@ -245,6 +243,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
+                'body_shapes' => $this->getBodyShape($debugType),
             ]);
 
             array_push($messages, [
@@ -255,6 +254,11 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -267,6 +271,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
+                'body_shapes' => $this->getBodyShape($debugType),
             ]);
 
             array_push($messages, [
@@ -277,6 +282,11 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -304,6 +314,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
+                'body_shapes' => $this->getBodyShape($debugType),
             ]);
 
             array_push($messages, [
@@ -314,6 +325,11 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -329,6 +345,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'We found some similiar options you might like:',
+                'recomended_products' => $this->getRecomendedProducts(),
             ]);
         }
 
@@ -362,8 +379,6 @@ class BestFitController extends Controller
                 'selected_shape' => 'Pear',
             ];
         }
-
-        return [];
     }
 
     private function getRecomendedProducts()
