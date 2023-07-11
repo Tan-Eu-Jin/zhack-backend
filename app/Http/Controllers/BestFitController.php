@@ -139,6 +139,7 @@ class BestFitController extends Controller
             [
                 'role' => 'assistant',
                 'content' => 'What type of fit do you usually prefer?',
+                'fit_type' => $this->getFitTypes(),
             ],
             [
                 'role' => 'user',
@@ -350,6 +351,33 @@ class BestFitController extends Controller
         }
 
         return $messages;
+    }
+
+    private function getFitTypes()
+    {
+        return [
+            [
+                'caption' => 'Very loose',
+            ],
+            [
+                'caption' => 'Oversized',
+            ],
+            [
+                'caption' => 'On the loose side',
+            ],
+            [
+                'caption' => 'Regular',
+            ],
+            [
+                'caption' => 'On the tight side',
+            ],
+            [
+                'caption' => 'Close Cut',
+            ],
+            [
+                'caption' => 'Very Tight',
+            ],
+        ];
     }
 
     private function getBodyShapes()
