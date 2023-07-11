@@ -235,7 +235,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShape($debugType),
+                'body_shapes' => $this->getBodyShapes($debugType),
             ]);
         }
 
@@ -243,7 +243,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShape($debugType),
+                'body_shapes' => $this->getBodyShapes($debugType),
             ]);
 
             array_push($messages, [
@@ -271,7 +271,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShape($debugType),
+                'body_shapes' => $this->getBodyShapes($debugType),
             ]);
 
             array_push($messages, [
@@ -314,7 +314,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShape($debugType),
+                'body_shapes' => $this->getBodyShapes($debugType),
             ]);
 
             array_push($messages, [
@@ -352,33 +352,30 @@ class BestFitController extends Controller
         return $messages;
     }
 
-    private function getBodyShape($debugType)
+    private function getBodyShapes($debugType)
     {
-        if ($debugType === 'second_level_found_match_wait_shape_reply') {
-            return [
-                'images' => [
-                    'https://placehold.co/270x480?text=Inverted+Triangle&font=lato',
-                    'https://placehold.co/270x480?text=Pear&font=lato',
-                    'https://placehold.co/270x480?text=Hourglass&font=lato',
-                    'https://placehold.co/270x480?text=Round&font=lato',
-                    'https://placehold.co/270x480?text=Rectangle&font=lato',
-                ],
-                'selected_shape' => null,
-            ];
-        }
-
-        if ($debugType === 'second_level_found_match_wait_bag_reply' || $debugType === 'second_level_found_match_add_to_bag' || $debugType === 'second_level_found_show_simillar_items') {
-            return [
-                'images' => [
-                    'https://placehold.co/270x480?text=Inverted+Triangle&font=lato',
-                    'https://placehold.co/270x480?text=Pear&font=lato',
-                    'https://placehold.co/270x480?text=Hourglass&font=lato',
-                    'https://placehold.co/270x480?text=Round&font=lato',
-                    'https://placehold.co/270x480?text=Rectangle&font=lato',
-                ],
-                'selected_shape' => 'Pear',
-            ];
-        }
+        return [
+            [
+                'img_src' => 'https://placehold.co/270x480?text=Inverted+Triangle&font=lato',
+                'caption' => 'Inverted Triangle',
+            ],
+            [
+                'img_src' => 'https://placehold.co/270x480?text=Pear&font=lato',
+                'caption' => 'Pear',
+            ],
+            [
+                'img_src' => 'https://placehold.co/270x480?text=Hourglass&font=lato',
+                'caption' => 'Hourglass',
+            ],
+            [
+                'img_src' => 'https://placehold.co/270x480?text=Round&font=lato',
+                'caption' => 'Round',
+            ],
+            [
+                'img_src' => 'https://placehold.co/270x480?text=Rectangle&font=lato',
+                'caption' => 'Rectangle',
+            ],
+        ];
     }
 
     private function getRecomendedProducts()
