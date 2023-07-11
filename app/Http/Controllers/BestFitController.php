@@ -235,7 +235,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShapes($debugType),
+                'body_shapes' => $this->getBodyShapes(),
             ]);
         }
 
@@ -243,7 +243,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShapes($debugType),
+                'body_shapes' => $this->getBodyShapes(),
             ]);
 
             array_push($messages, [
@@ -271,7 +271,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShapes($debugType),
+                'body_shapes' => $this->getBodyShapes(),
             ]);
 
             array_push($messages, [
@@ -314,7 +314,7 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'For a better recommendation, please tell use more about your body shape. Select one of the options below.',
-                'body_shapes' => $this->getBodyShapes($debugType),
+                'body_shapes' => $this->getBodyShapes(),
             ]);
 
             array_push($messages, [
@@ -352,7 +352,7 @@ class BestFitController extends Controller
         return $messages;
     }
 
-    private function getBodyShapes($debugType)
+    private function getBodyShapes()
     {
         return [
             [
