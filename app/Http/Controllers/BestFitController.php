@@ -158,16 +158,16 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
-                'best_fit' => [
-                    'size' => 'M',
-                    'size_system' => 'Intl.',
-                    'simple_sku' => 'This-is-a-placeholder',
-                ],
             ]);
 
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Would you like to add this item to your bag?',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
         }
 
@@ -175,16 +175,16 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
-                'best_fit' => [
-                    'size' => 'M',
-                    'size_system' => 'Intl.',
-                    'simple_sku' => 'This-is-a-placeholder',
-                ],
             ]);
 
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Would you like to add this item to your bag?',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -207,16 +207,16 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
-                'best_fit' => [
-                    'size' => 'M',
-                    'size_system' => 'Intl.',
-                    'simple_sku' => 'This-is-a-placeholder',
-                ],
             ]);
 
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Would you like to add this item to your bag?',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -254,16 +254,16 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
-                'best_fit' => [
-                    'size' => 'M',
-                    'size_system' => 'Intl.',
-                    'simple_sku' => 'This-is-a-placeholder',
-                ],
             ]);
 
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Would you like to add this item to your bag?',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
         }
 
@@ -282,16 +282,16 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
-                'best_fit' => [
-                    'size' => 'M',
-                    'size_system' => 'Intl.',
-                    'simple_sku' => 'This-is-a-placeholder',
-                ],
             ]);
 
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Would you like to add this item to your bag?',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
@@ -325,16 +325,16 @@ class BestFitController extends Controller
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Based on your fit preference, the item measurements and your past purchases, size M will be a better fit for you for this item.',
-                'best_fit' => [
-                    'size' => 'M',
-                    'size_system' => 'Intl.',
-                    'simple_sku' => 'This-is-a-placeholder',
-                ],
             ]);
 
             array_push($messages, [
                 "role" => "assistant",
                 'content' => 'Would you like to add this item to your bag?',
+                'best_fit' => [
+                    'size' => 'M',
+                    'size_system' => 'Intl.',
+                    'simple_sku' => 'This-is-a-placeholder',
+                ],
             ]);
 
             array_push($messages, [
