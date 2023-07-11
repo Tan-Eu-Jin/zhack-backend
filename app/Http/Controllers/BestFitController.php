@@ -35,6 +35,7 @@ class BestFitController extends Controller
             ], 401);
         }
         $debugType = $request->debug_type;
+        $selectedSizeSystem = $request->selected_size_system;
 
         // Get sizes of particular SKU
         // $sizes = $this->getProductSizes();
@@ -47,7 +48,7 @@ class BestFitController extends Controller
 
         return response()->json([
             'data' => [
-                'messages' => $this->getMessages($debugType),
+                'messages' => $this->getMessages($debugType, $selectedSizeSystem),
             ]
         ]);
     }
@@ -117,7 +118,7 @@ class BestFitController extends Controller
         return $chat;
     }
 
-    private function getMessages($debugType)
+    private function getMessages($debugType, $selectedSizeSystem)
     {
         $messages = [
             [
@@ -166,7 +167,7 @@ class BestFitController extends Controller
                 'content' => 'Would you like to add this item to your bag?',
                 'best_fit' => [
                     'size' => 'M',
-                    'size_system' => 'Intl.',
+                    'size_system' => $selectedSizeSystem,
                     'simple_sku' => 'This-is-a-placeholder',
                 ],
             ]);
@@ -183,7 +184,7 @@ class BestFitController extends Controller
                 'content' => 'Would you like to add this item to your bag?',
                 'best_fit' => [
                     'size' => 'M',
-                    'size_system' => 'Intl.',
+                    'size_system' => $selectedSizeSystem,
                     'simple_sku' => 'This-is-a-placeholder',
                 ],
             ]);
@@ -215,7 +216,7 @@ class BestFitController extends Controller
                 'content' => 'Would you like to add this item to your bag?',
                 'best_fit' => [
                     'size' => 'M',
-                    'size_system' => 'Intl.',
+                    'size_system' => $selectedSizeSystem,
                     'simple_sku' => 'This-is-a-placeholder',
                 ],
             ]);
@@ -262,7 +263,7 @@ class BestFitController extends Controller
                 'content' => 'Would you like to add this item to your bag?',
                 'best_fit' => [
                     'size' => 'M',
-                    'size_system' => 'Intl.',
+                    'size_system' => $selectedSizeSystem,
                     'simple_sku' => 'This-is-a-placeholder',
                 ],
             ]);
@@ -290,7 +291,7 @@ class BestFitController extends Controller
                 'content' => 'Would you like to add this item to your bag?',
                 'best_fit' => [
                     'size' => 'M',
-                    'size_system' => 'Intl.',
+                    'size_system' => $selectedSizeSystem,
                     'simple_sku' => 'This-is-a-placeholder',
                 ],
             ]);
@@ -333,7 +334,7 @@ class BestFitController extends Controller
                 'content' => 'Would you like to add this item to your bag?',
                 'best_fit' => [
                     'size' => 'M',
-                    'size_system' => 'Intl.',
+                    'size_system' => $selectedSizeSystem,
                     'simple_sku' => 'This-is-a-placeholder',
                 ],
             ]);
