@@ -24,7 +24,7 @@ class BestFitController extends Controller
             'messages' => 'required|array',
             'messages.*.role' => 'required|in:user,assistant,system',
             'messages.*.content' => 'required',
-            'selected_body_shape' => 'sometimes|string',
+            'selected_size_system' => 'required',
         ]);
 
         if ($validator->fails()) {
