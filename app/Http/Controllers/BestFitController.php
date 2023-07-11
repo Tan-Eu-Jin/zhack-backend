@@ -20,7 +20,7 @@ class BestFitController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'config_sku' => 'required|max:255',
-            'user_id' => 'required',
+            'user_id' => 'sometimes',
             'messages' => 'required|array',
             'messages.*.role' => 'required|in:user,assistant,system',
             'messages.*.content' => 'required',
