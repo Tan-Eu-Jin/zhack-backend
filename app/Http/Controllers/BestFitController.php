@@ -34,88 +34,186 @@ class BestFitController extends Controller
                 ]
             ], 401);
         }
+
         $debugType = $request->debug_type;
+        $configSku = $request->config_sku;
         $selectedSizeSystem = $request->selected_size_system;
 
-        // Get sizes of particular SKU
-        // $sizes = $this->getProductSizes();
+        // Get sizes of particular product
+        $sizes = $this->getProductSizes($configSku);
+
+        $latestMessage = $request->messages;
+        $latestMessage = end($latestMessage);
+
+        $responseMessages = $request->messages;
+        if ($latestMessage['content'] === 'Yes, add this item to my bag') {
+            array_push($responseMessages, [
+                'role' => 'assistant',
+                'content' => 'Item has been added to your cart! Have a good day!',
+            ]);
+
+            return response()->json([
+                'data' => [
+                    'messages' => $responseMessages,
+                ]
+            ]);
+        }
+
+        // Check for "Item has been added"
+        foreach ($responseMessages as $index => $message) {
+            if ($message['role'] === 'assistant' && $message['content'] === 'Item has been added to your cart! Have a good day!') {
+                $responseMessages = array_splice($responseMessages, 0, $index + 1);
+                return response()->json([
+                    'data' => [
+                        'messages' => $responseMessages,
+                    ]
+                ]);
+            }
+        }
 
         // Connect To OpenAI
-        // $chat = $this->getOpenAiResponse();
-
-        // Final Best Fit
-        $confidenceScore = rand(0, 1000);
+        $chat = $this->getOpenAiResponse($request->messages, $sizes);
+        array_push($responseMessages, $chat['choices'][0]['message']);
+        $responseMessages = $this->processResponseMessages($responseMessages, $configSku, $selectedSizeSystem);
 
         return response()->json([
             'data' => [
-                'messages' => $this->getMessages($debugType, $selectedSizeSystem),
+                'messages' => $responseMessages,
             ]
         ]);
     }
 
-    private function getProductSizes()
+    private function getProductDetails($configSku)
     {
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'Cookie' => '_cdn=cf',
-        ])->get('https://api.staging.sg.zalora.net/v1/products/abercrombie-fitch-easy-throw-on-swing-dress-pink-699224.html/size')->json();
+        ])->get('https://api.staging.sg.zalora.net/v1/products/' . $configSku . '/details')->json();
 
         return $response['data'];
     }
 
-    private function getOpenAiResponse()
+    private function getProductSizes($configSku)
     {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Cookie' => '_cdn=cf',
+        ])->get('https://api.staging.sg.zalora.net/v1/products/' . $configSku . '/size')->json();
+
+        return $response['data'];
+    }
+
+    private function getQuestionsSetsForOpenAi($purchaser)
+    {
+        return ($purchaser === 'Themselves') ?  [
+            "Second, you need to ask the user which body size resembles them the most. The body size options are Inverted Triangle, Pear, Hourglass, Round, Rectangle.",
+            "Thrid, you need to ask the user their fit preference. The fit preferences are On the loose side, Regular, On the tight side.",
+            "Fourth, you need to ask the user what are the usual size they usually wear.",
+        ] : [
+            "You need to ask the user if they know the size of the person they are buying for OR they can provide two of the three measurements of hips, waist or the bust.",
+        ];
+    }
+
+    private function getOpenAiResponse($messages, $sizes)
+    {
+        $allMessages = [
+            [
+                "role" => "system",
+                'content' => '""" Please act as a perfect fit assistant and help the user find the best fit. You need to ask the users a few questions before determining the best fit. Ask the questions provided below, in order. Display it to the user and wait for a reply before proceeding to the next. Once all the questions are answered, match it agaisnt the available sizes and provide the best fit. """ """ First, you need to ask the user if they are purchasing this for themselves or for others. """ """ Here are the set of questions if the user is buying for themselves. Second, you need to ask the user which body size resembles them the most. The body size options are Inverted Triangle, Pear, Hourglass, Round, Rectangle. Thrid, you need to ask the user their fit preference. The fit preferences are On the loose side, Regular, On the tight side. Fourth, you need to ask the user what are the usual size they usually wear. """ """ Here are the set of questions if the user is buy for someone else. Second, You need to ask the user if they know the size of the person they are buying for OR they can provide two of the three measurements of hips, waist or the bust. If you cannot find a size based on these information, end the suggestion. """ """ IT IS CRUCIAL THAT YOU ASK THE QUESTIONS ONE BY ONE AND WAIT FOR A REPLY BEFORE ASKING THE NEXT. """',
+            ],
+            [
+                "role" => "system",
+                'content' => '""" Here is the size chart. ' . $sizes['SizeChart'] . ' """',
+            ],
+            [
+                "role" => "system",
+                'content' => '""" When you respond to me, respond to me in a point form where each question and answer is separated by a \':\' """',
+            ],
+            [
+                "role" => "system",
+                'content' => '"""The best match for your measurements is size S""" """The best match for your measurements is size M""" is the only format you should suggest the size in.',
+            ],
+        ];
+
+        foreach ($messages as $message) {
+            array_push($allMessages, [
+                'role' => $message['role'],
+                'content' => $message['content'],
+            ]);
+        };
+
         $chat = OpenAI::chat()->create([
             'model' => 'gpt-3.5-turbo',
-            "messages" => [
-                [
-                    "role" => "system",
-                    'content' => 'You are helping the user find the best fit. You aim to give the most precise fi',
-                ],
-                [
-                    "role" => "assistant",
-                    "content" => "Is this purchase for yourself or someone else?"
-                ],
-                [
-                    "role" => "user",
-                    "content" => "Myself"
-                ],
-                [
-                    "role" => "assistant",
-                    "content" => "What type of fit do you usually prefer?"
-                ],
-                [
-                    "role" => "user",
-                    "content" => "Regular"
-                ],
-                [
-                    "role" => "assistant",
-                    "content" => "What size do you usually wear? Or do you hesitate between 2 size?"
-                ],
-                [
-                    "role" => "user",
-                    "content" => "M most of the time or S or even L sometimes"
-                ]
-            ]
+            "messages" => $allMessages,
         ]);
 
-        $chat->id; // 'chatcmpl-6pMyfj1HF4QXnfvjtfzvufZSQq6Eq'
-        $chat->object; // 'chat.completion'
-        $chat->created; // 1677701073
-        $chat->model; // 'gpt-3.5-turbo-0301'
+        $chat->id;
+        $chat->object;
+        $chat->created;
+        $chat->model;
 
         foreach ($chat->choices as $result) {
-            $result->index; // 0
-            $result->message->role; // 'assistant'
-            $result->message->content; // '\n\nHello there! How can I assist you today?'
-            $result->finishReason; // 'stop'
+            $result->index;
+            $result->message->role;
+            $result->message->content;
+            $result->finishReason;
         }
 
-        $chat->usage->promptTokens; // 9,
-        $chat->usage->completionTokens; // 12,
-        $chat->usage->totalTokens; // 21
+        $chat->usage->promptTokens;
+        $chat->usage->completionTokens;
+        $chat->usage->totalTokens;
 
         return $chat;
+    }
+
+    private function processResponseMessages($responseMessages, $configSku, $selectedSizeSystem)
+    {
+        foreach ($responseMessages as $index => $message) {
+            $role = $message['role'];
+            $content = $message['content'];
+
+            if (
+                $role === 'assistant' &&
+                (str_contains($content, 'Inverted Triangle') || str_contains($content, 'Pear') || str_contains($content, 'Hourglass') || str_contains($content, 'Round') || str_contains($content, 'Rectangle')) &&
+                !str_contains($content, 'Based on your response')
+            ) {
+                $responseMessages[$index]['body_shapes'] = $this->getBodyShapes();
+            }
+
+            if (
+                $role === 'assistant' &&
+                (str_contains(strtolower($content), 'on the loose side') || str_contains(strtolower($content), 'regular') || str_contains(strtolower($content), 'on the tight side')) &&
+                !str_contains($content, 'Based on your response')
+            ) {
+                $responseMessages[$index]['fit_types'] = $this->getFitTypes();
+            }
+
+            // Determine if a response is found
+            if ($role === 'assistant' && str_contains($content, 'Based on your')) {
+                $sizeByOpenAi = substr($content, -2, -1);
+
+                $details = $this->getProductDetails($configSku);
+                $simpleSku = '';
+                foreach ($details['Simples'] as $simple) {
+                    if (strtolower($simple['Size']) === strtolower($sizeByOpenAi)) {
+                        $simpleSku = $simple['SimpleSku'];
+                        break;
+                    }
+                }
+
+                array_push($responseMessages, [
+                    "role" => "assistant",
+                    'content' => 'Would you like to add this item to your bag?',
+                    'best_fit' => [
+                        'size' => $sizeByOpenAi,
+                        'size_system' => $selectedSizeSystem,
+                        'simple_sku' => $simpleSku,
+                    ],
+                ]);
+            }
+        }
+
+        return $responseMessages;
     }
 
     private function getMessages($debugType, $selectedSizeSystem)
@@ -358,12 +456,6 @@ class BestFitController extends Controller
     {
         return [
             [
-                'caption' => 'Very loose',
-            ],
-            [
-                'caption' => 'Oversized',
-            ],
-            [
                 'caption' => 'On the loose side',
             ],
             [
@@ -372,12 +464,6 @@ class BestFitController extends Controller
             [
                 'caption' => 'On the tight side',
             ],
-            [
-                'caption' => 'Close Cut',
-            ],
-            [
-                'caption' => 'Very Tight',
-            ],
         ];
     }
 
@@ -385,23 +471,23 @@ class BestFitController extends Controller
     {
         return [
             [
-                'img_src' => 'https://placehold.co/270x480?text=Inverted+Triangle&font=lato',
+                'img_src' => 'https://i.postimg.cc/GHLpCLJG/image-triangle.png',
                 'caption' => 'Inverted Triangle',
             ],
             [
-                'img_src' => 'https://placehold.co/270x480?text=Pear&font=lato',
+                'img_src' => 'https://i.postimg.cc/tZGXmp41/image-pear.png',
                 'caption' => 'Pear',
             ],
             [
-                'img_src' => 'https://placehold.co/270x480?text=Hourglass&font=lato',
+                'img_src' => 'https://i.postimg.cc/k2DX2TH5/image-hourglass.png',
                 'caption' => 'Hourglass',
             ],
             [
-                'img_src' => 'https://placehold.co/270x480?text=Round&font=lato',
+                'img_src' => 'https://i.postimg.cc/bGtyTspc/image-round.png',
                 'caption' => 'Round',
             ],
             [
-                'img_src' => 'https://placehold.co/270x480?text=Rectangle&font=lato',
+                'img_src' => 'https://i.postimg.cc/75cP0gvn/image-rectangle.png',
                 'caption' => 'Rectangle',
             ],
         ];
